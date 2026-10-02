@@ -240,6 +240,27 @@ if (!Number.isInteger(qtd) || qtd <= 0) {
 
 **Resultado após a correção:** "Quantidade inválida"
 
+### Fluxograma — ERRO 1
+
+```mermaid
+flowchart TD
+    A[Início] --> B[Informar produto e quantidade]
+    B --> C[Converter quantidade para Number]
+    C --> D{Quantidade é inteira e maior que 0?}
+
+    D -- Não --> E[Exibe: Quantidade inválida]
+    E --> F[Fim]
+
+    D -- Sim --> G[Verificar estoque]
+    G --> H{Quantidade maior que o estoque?}
+
+    H -- Sim --> I[Exibe: Quantidade indisponível em estoque]
+    I --> F
+
+    H -- Não --> J[Continuar processamento]
+    J --> K[Calcular subtotal]
+    K --> F
+
 
 ### ERRO 2
 
@@ -253,6 +274,36 @@ if (qtd >= estoque[produtoSelecionado]) {
   return;
 }
 ```
+
+
+---
+
+## Fluxograma — ERRO 2
+
+```markdown
+### Fluxograma — ERRO 2
+
+```mermaid
+flowchart TD
+    A[Início] --> B[Selecionar produto: Teclado]
+    B --> C[Informar quantidade: 10]
+    C --> D[Estoque disponível: 10]
+
+    D --> E{Quantidade maior que o estoque?}
+
+    E -- Não --> F[Pedido aceito]
+    F --> G[Calcular subtotal]
+    G --> H[Subtotal: R$ 1.500,00]
+
+    H --> I[Aplicar desconto de 5%]
+    I --> J[Desconto: R$ 75,00]
+
+    J --> K[Frete retirada: R$ 0,00]
+    K --> L[Total: R$ 1.425,00]
+    L --> M[Fim]
+
+    E -- Sim --> N[Exibe: Quantidade indisponível em estoque]
+    N --> M
 
 **Comportamento esperado:** se existem 10 teclados em estoque, dá para comprar os 10
 
@@ -307,6 +358,32 @@ if (qtd >= QTD_MINIMA_DESCONTO) {
 }
 ```
 
+
+---
+
+## Fluxograma — ERRO 3
+
+```markdown
+### Fluxograma — ERRO 3
+
+```mermaid
+flowchart TD
+    A[Início] --> B[Selecionar produto: Mouse]
+    B --> C[Informar quantidade: 5]
+    C --> D[Calcular subtotal]
+    D --> E[Subtotal: R$ 400,00]
+
+    E --> F{Quantidade maior ou igual a 5?}
+
+    F -- Sim --> G[Aplicar desconto de 5%]
+    G --> H[Desconto: R$ 20,00]
+    H --> I[Frete retirada: R$ 0,00]
+    I --> J[Total: R$ 380,00]
+    J --> K[Fim]
+
+    F -- Não --> L[Não aplicar desconto por quantidade]
+    L --> I
+
 **Resultado após a correção:** total R$ 380,00. Com 4 unidades continua sem desconto, como deve ser
 
 ### ERRO 4
@@ -354,6 +431,44 @@ const totalParcial = subtotal - desconto + valorFrete;
 **Resultado após a correção:** desconto de R$ 120,00 e total de R$ 680,00.
 
 
+---
+
+## Fluxograma — ERRO 4
+
+```markdown
+### Fluxograma — ERRO 4
+
+```mermaid
+flowchart TD
+    A[Início] --> B[Selecionar produto: Mouse]
+    B --> C[Informar quantidade: 10]
+    C --> D[Calcular subtotal]
+    D --> E[Subtotal: R$ 800,00]
+
+    E --> F{Cupom SENAI10?}
+
+    F -- Sim --> G[Aplicar 10% de desconto]
+    G --> H[Desconto do cupom: R$ 80,00]
+
+    F -- Não --> I[Desconto do cupom: R$ 0,00]
+
+    H --> J{Quantidade maior ou igual a 5?}
+    I --> J
+
+    J -- Sim --> K[Adicionar desconto de quantidade]
+    K --> L[Desconto de quantidade: R$ 40,00]
+
+    J -- Não --> M[Não adicionar desconto de quantidade]
+
+    L --> N[Somar os descontos]
+    M --> N
+
+    N --> O[Desconto total: R$ 120,00]
+    O --> P[Frete retirada: R$ 0,00]
+    P --> Q[Total: R$ 680,00]
+    Q --> R[Fim]
+
+
 ### ERRO 5
 
 **Nível:** Difícil
@@ -392,6 +507,38 @@ const altoValor = totalParcial >= LIMITE_ALTO_VALOR;
 ```
 
 **Resultado após a correção:** total de R$ 2.850,00 e "Pedido de alto valor"
+
+
+---
+
+## Fluxograma — ERRO 5
+
+```markdown
+### Fluxograma — ERRO 5
+
+```mermaid
+flowchart TD
+    A[Início] --> B[Selecionar produto: Notebook]
+    B --> C[Informar quantidade: 1]
+    C --> D[Calcular subtotal]
+    D --> E[Subtotal: R$ 3.000,00]
+
+    E --> F[Desconto inicial: R$ 0,00]
+    F --> G[Frete retirada: R$ 0,00]
+    G --> H[Calcular total parcial]
+    H --> I[Total parcial: R$ 3.000,00]
+
+    I --> J{Total maior ou igual a R$ 3.000?}
+
+    J -- Sim --> K[Pedido classificado como alto valor]
+    K --> L[Aplicar desconto extra de 5%]
+    L --> M[Desconto: R$ 150,00]
+    M --> N[Total final: R$ 2.850,00]
+    N --> O[Exibe: Pedido de alto valor]
+    O --> P[Fim]
+
+    J -- Não --> Q[Não aplicar desconto de alto valor]
+    Q --> P
 
 
 ### ERRO 6
@@ -438,6 +585,44 @@ if (total <= 0) {
 ```
 
 **Resultado após a correção:** "Pedido de alto valor." e total de R$ 2.907,00
+
+
+---
+
+## Fluxograma — ERRO 6
+
+```markdown
+### Fluxograma — ERRO 6
+
+```mermaid
+flowchart TD
+    A[Início] --> B[Selecionar produto: Notebook]
+    B --> C[Informar quantidade: 1]
+    C --> D[Calcular subtotal]
+    D --> E[Subtotal: R$ 3.000,00]
+
+    E --> F[Selecionar frete expresso]
+    F --> G[Frete: R$ 60,00]
+    G --> H[Calcular total parcial]
+    H --> I[Total parcial: R$ 3.060,00]
+
+    I --> J{Total parcial maior ou igual a R$ 3.000?}
+
+    J -- Sim --> K[Definir altoValor como verdadeiro]
+    K --> L[Aplicar desconto de 5%]
+    L --> M[Desconto: R$ 153,00]
+    M --> N[Total final: R$ 2.907,00]
+
+    N --> O{Total final é menor ou igual a 0?}
+
+    O -- Não --> P[Exibe: Pedido de alto valor]
+    P --> Q[Fim]
+
+    O -- Sim --> R[Exibe: Valor do pedido inválido]
+    R --> Q
+
+    J -- Não --> S[Definir altoValor como falso]
+    S --> N
 
 
 
