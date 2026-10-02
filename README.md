@@ -8,9 +8,9 @@
 | **Curso** | Técnico De Desenvolvimento de Sistemas |
 | **Unidade curricular** | SESI CE 356 |
 | **Atividade** | Teste de Caixa Branca – Sistema de Pedidos |
-| **Aluno** | Leandro Saltorato Junior |
+| **Aluno** | Matheus Spineli |
 | **Turma** | 3A |
-| **Professor** | Robson, Reenye e Wellington |
+| **Professor** | Robson |
 | **Data** | 30/09/2026 |
 
 ---
@@ -159,36 +159,7 @@ O código só usa `if`. Não tem `switch`, operador ternário nem laço de repet
 
 ---
 
-## 3. Fluxograma do Exemplo
-
-Este é o fluxo completo do sistema, do clique no botão até o resultado na tela.
-
-```mermaid
-flowchart TD
-    A([Início: clique em Calcular]) --> B[/Lê produto, quantidade, cupom e frete/]
-    B --> C{qtd < 0?}
-    C -- Sim --> C1[Exibe: Quantidade inválida] --> Z
-    C -- Não --> D{qtd >= estoque?}
-    D -- Sim --> D1[Exibe: Indisponível em estoque] --> Z
-    D -- Não --> E[subtotal = preço × qtd]
-    E --> F[desconto = calcularDesconto]
-    F --> G[valorFrete = calcularFrete]
-    G --> H[total = subtotal − desconto + frete]
-    H --> I{qtd > 5?}
-    I -- Sim --> I1[total −= subtotal × 5%] --> J
-    I -- Não --> J{total > 3000?}
-    J -- Sim --> J1[total ×= 0,95] --> K
-    J -- Não --> K{total <= 0?}
-    K -- Sim --> K1[mensagem = Valor inválido] --> M
-    K -- Não --> L{total >= 3000?}
-    L -- Sim --> L1[mensagem = Alto valor] --> M
-    L -- Não --> L2[mensagem = Sucesso] --> M
-    M[/Exibe mensagem, subtotal, desconto, frete e total/] --> Z([Fim])
-```
-
----
-
-## 4. Casos de Teste
+## 3. Casos de Teste
 
 Criei um caso de teste para cada erro que encontrei
 
@@ -203,7 +174,7 @@ Criei um caso de teste para cada erro que encontrei
 
 ---
 
-## 5. Resultados dos Testes
+## 4. Resultados dos Testes
 
 Executei os casos em Node.js com a mesma lógica do `script.js`, primeiro no código original e depois no corrigido
 
@@ -231,7 +202,7 @@ Executei os casos em Node.js com a mesma lógica do `script.js`, primeiro no có
 
 ---
 
-## 6. Análise dos Resultados
+## 5. Análise dos Resultados
 
 Encontrei seis erros de lógica. Abaixo explico cada um, mostrando o caminho que o programa percorreu
 
@@ -269,21 +240,6 @@ if (!Number.isInteger(qtd) || qtd <= 0) {
 
 **Resultado após a correção:** "Quantidade inválida"
 
-**Fluxograma:**
-```mermaid
-flowchart TD
-    A[/qtd = 0, produto = mouse, frete = normal/] --> B{"qtd < 0? (0 < 0)"}
-    B -- "Falso (erro: deveria barrar)" --> C{"qtd >= estoque? (0 >= 20)"}
-    C -- Falso --> D["subtotal = 80 × 0 = 0"]
-    D --> E["desconto = 0"]
-    E --> F{"subtotal >= 500?"}
-    F -- Falso --> G["frete = 30"]
-    G --> H["total = 0 − 0 + 30 = 30"]
-    H --> I["Exibe: Sucesso, total R$ 30,00"]
-    B -. "Caminho esperado" .-> X["Exibe: Quantidade inválida"]
-```
-
----
 
 ### ERRO 2
 
@@ -317,17 +273,6 @@ if (qtd > estoque[produtoSelecionado]) {
 
 **Resultado após a correção:** o pedido é aceito, com total R$ 1.425,00. Também testei quantidade 11, que continua retornando "Quantidade indisponível em estoque."
 
-**Fluxograma:**
-```mermaid
-flowchart TD
-    A[/qtd = 10, produto = teclado, estoque = 10/] --> B{"qtd < 0?"}
-    B -- Falso --> C{"qtd >= estoque? (10 >= 10)"}
-    C -- "Verdadeiro (erro: deveria ser falso)" --> D["Exibe: Indisponível em estoque"]
-    D --> E([return: encerra sem calcular])
-    C -. "Caminho esperado" .-> F["subtotal = 1500 → ... → total = 1425"]
-```
-
----
 
 ### ERRO 3
 
@@ -363,19 +308,6 @@ if (qtd >= QTD_MINIMA_DESCONTO) {
 ```
 
 **Resultado após a correção:** total R$ 380,00. Com 4 unidades continua sem desconto, como deve ser
-
-**Fluxograma:**
-```mermaid
-flowchart TD
-    A[/qtd = 5, mouse, retirada/] --> B["subtotal = 400; desconto = 0; frete = 0"]
-    B --> C["total = 400"]
-    C --> D{"qtd > 5? (5 > 5)"}
-    D -- "Falso (erro: deveria aplicar)" --> E{"total > 3000?"}
-    E -- Falso --> F["Exibe: total R$ 400,00"]
-    D -. "Caminho esperado" .-> G["total = 400 − 20 = 380"]
-```
-
----
 
 ### ERRO 4
 
@@ -421,20 +353,6 @@ const totalParcial = subtotal - desconto + valorFrete;
 
 **Resultado após a correção:** desconto de R$ 120,00 e total de R$ 680,00.
 
-**Fluxograma:**
-```mermaid
-flowchart TD
-    A[/mouse, qtd = 10, cupom = SENAI10, retirada/] --> B["subtotal = 800"]
-    B --> C["desconto = 80 (cupom)"]
-    C --> D["frete = 0"]
-    D --> E["total = 800 − 80 + 0 = 720"]
-    E --> F{"qtd > 5?"}
-    F -- Sim --> G["total = 720 − 40 = 680<br/>(desconto continua 80)"]
-    G --> H["Exibe: Desconto 80 / Total 680 (não fecha a conta)"]
-    F -. "Correção" .-> I["desconto = 80 + 40 = 120"]
-```
-
----
 
 ### ERRO 5
 
@@ -475,19 +393,6 @@ const altoValor = totalParcial >= LIMITE_ALTO_VALOR;
 
 **Resultado após a correção:** total de R$ 2.850,00 e "Pedido de alto valor"
 
-**Fluxograma:**
-```mermaid
-flowchart TD
-    A[/notebook, qtd = 1, retirada/] --> B["subtotal = 3000; desconto = 0; frete = 0"]
-    B --> C["total = 3000"]
-    C --> D{"total > 3000? (3000 > 3000)"}
-    D -- "Falso (sem 5% extra)" --> E{"total <= 0?"}
-    E -- Falso --> F{"total >= 3000? (3000 >= 3000)"}
-    F -- "Verdadeiro" --> G["mensagem = Alto valor"]
-    G --> H["Exibe: Alto valor, total R$ 3.000,00 (decisões inconsistentes)"]
-```
-
----
 
 ### ERRO 6
 
@@ -534,21 +439,7 @@ if (total <= 0) {
 
 **Resultado após a correção:** "Pedido de alto valor." e total de R$ 2.907,00
 
-**Fluxograma:**
-```mermaid
-flowchart TD
-    A[/notebook, qtd = 1, expresso/] --> B["subtotal = 3000; desconto = 0"]
-    B --> C["frete = 60"]
-    C --> D["total = 3060"]
-    D --> E{"total > 3000? (3060 > 3000)"}
-    E -- Sim --> F["total = 3060 × 0,95 = 2907"]
-    F --> G{"total <= 0?"}
-    G -- Falso --> H{"total >= 3000? (2907 >= 3000)"}
-    H -- "Falso (erro: deveria ser alto valor)" --> I["mensagem = Sucesso"]
-    I --> J["Exibe: Sucesso, total R$ 2.907,00"]
-```
 
----
 
 ### Comparação antes e depois
 
